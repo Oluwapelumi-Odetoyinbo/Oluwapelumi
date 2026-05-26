@@ -1,44 +1,45 @@
 import React, { useEffect } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
+import Marquee from './components/Marquee';
+import About from './components/About';
+import Experience from './components/Timeline';
 import Philosophy from './components/Philosophy';
 import Projects from './components/Projects';
 import Footer from './components/Footer';
 
+gsap.registerPlugin(ScrollTrigger);
+
 function App() {
 
   useEffect(() => {
-    // Scroll reveal animation logic
-    const revealElements = document.querySelectorAll('.reveal');
-    const revealOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
-
-    const revealOnScroll = new IntersectionObserver(function (entries, observer) {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, revealOptions);
-
-    revealElements.forEach(el => revealOnScroll.observe(el));
+    // Refresh ScrollTrigger after all content loads
+    ScrollTrigger.refresh();
 
     return () => {
-      revealElements.forEach(el => revealOnScroll.unobserve(el));
-    }
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
   }, []);
 
   return (
-    <>
+    <div className="grain">
       <Navigation />
-      <main className="max-w-[1200px] mx-auto px-10 py-[60px]">
+      <main className="max-w-[1200px] mx-auto px-6 sm:px-10 py-8 sm:py-[60px]">
         <Hero />
+      </main>
+      <Marquee />
+      <main className="max-w-[1200px] mx-auto px-6 sm:px-10">
+        <About />
+        <Experience />
         <Philosophy />
         <Projects />
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
 
 export default App;
+

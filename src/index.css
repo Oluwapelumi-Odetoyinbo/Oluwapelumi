@@ -6,24 +6,45 @@
   --color-yellow: #FFDF21;
   --color-olive: #929559;
   --color-warmbg: #F2EAD8;
-  
+  --color-accent: #FF6B35;
+
   --font-inter: Inter, -apple-system, sans-serif;
-  
+
   --shadow-brutalist: 4px 4px 0px #111111;
   --shadow-brutalist-hover: 6px 6px 0px #111111;
   --shadow-soft: 0 10px 40px rgba(0,0,0,0.08);
+  --shadow-elevated: 0 20px 60px rgba(0,0,0,0.12);
 }
 
 @layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
   h1, h2, h3, h4 {
     font-weight: 700;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
   }
-  
+
   p {
     color: #4A4A4A;
-    font-size: 18px;
+    font-size: 17px;
+    line-height: 1.7;
     letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background-color: var(--color-yellow);
+    color: var(--color-black);
   }
 }
 
@@ -36,27 +57,28 @@
     text-decoration: none;
     border: 2px solid var(--color-black);
     display: inline-block;
-    transition-property: all;
-    transition-duration: 100ms;
+    transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
   }
-  
+
   .btn-primary {
     background-color: var(--color-yellow);
     color: var(--color-black);
     box-shadow: var(--shadow-brutalist);
   }
-  
+
   .btn-primary:hover {
-    transform: translate(-0.125rem, -0.125rem);
+    transform: translate(-2px, -2px);
     box-shadow: var(--shadow-brutalist-hover);
   }
 
   .btn-primary:active {
-    transform: translate(0.125rem, 0.125rem);
+    transform: translate(2px, 2px);
     box-shadow: none;
   }
-  
+
   .btn-secondary {
     background-color: transparent;
     color: var(--color-black);
@@ -66,17 +88,235 @@
   .btn-secondary:hover {
     background-color: #EAE6DB;
   }
-  
-  .reveal {
-    opacity: 0;
-    transform: translateY(1.25rem);
-    transition-property: all;
-    transition-duration: 700ms;
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+
+  .card-hover {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
-  .reveal.active {
-    opacity: 1;
-    transform: translateY(0);
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 6px 8px 0px #111111;
+  }
+
+  .grain::after {
+    content: "";
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  .line-reveal {
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  .mobile-menu {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .marquee-track {
+    animation: marquee 20s linear infinite;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.4); }
+  }
+
+  .pulse-dot {
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  .scroll-section {
+    will-change: transform;
+  }
+
+  .split-line {
+    overflow: hidden;
+    display: block;
+  }
+
+  .split-line > span {
+    display: inline-block;
+  }
+
+  /* ── Bento Grid ── */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .bento-grid {
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 20px;
+    }
+  }
+
+  .bento-tile {
+    border: 2px solid #111111;
+    border-radius: 12px;
+    padding: 24px;
+    background: #fff;
+    box-shadow: 4px 4px 0px #111111;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .bento-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 6px 8px 0px #111111;
+  }
+
+  @media (min-width: 768px) {
+    .bento-tile {
+      padding: 32px;
+    }
+  }
+
+  /* ── Vinyl Record ── */
+  @keyframes vinyl-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .vinyl {
+    animation: vinyl-spin 3s linear infinite;
+  }
+
+  .vinyl-paused {
+    animation-play-state: paused;
+  }
+
+  /* ── Neural Network Dots ── */
+  @keyframes neural-pulse {
+    0%, 100% { opacity: 0.3; r: 3; }
+    50% { opacity: 1; r: 5; }
+  }
+
+  @keyframes neural-line-pulse {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.4; }
+  }
+
+  .neural-dot {
+    animation: neural-pulse 2.5s ease-in-out infinite;
+  }
+
+  .neural-line {
+    animation: neural-line-pulse 2.5s ease-in-out infinite;
+  }
+
+  /* ── Timeline ── */
+  .timeline-line {
+    position: absolute;
+    left: 16px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #E5E1D8;
+    transform-origin: top;
+  }
+
+  @media (min-width: 768px) {
+    .timeline-line {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .timeline-line-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #111111;
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+
+  .timeline-node {
+    position: relative;
+    padding-left: 44px;
+    padding-bottom: 48px;
+  }
+
+  @media (min-width: 768px) {
+    .timeline-node {
+      width: 50%;
+      padding-left: 0;
+      padding-bottom: 64px;
+    }
+
+    .timeline-node:nth-child(odd) {
+      margin-left: 50%;
+      padding-left: 48px;
+    }
+
+    .timeline-node:nth-child(even) {
+      margin-right: 50%;
+      padding-right: 48px;
+      text-align: right;
+    }
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: 10px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 3px solid #111111;
+    background: var(--color-cream);
+    z-index: 2;
+  }
+
+  @media (min-width: 768px) {
+    .timeline-node:nth-child(odd) .timeline-dot {
+      left: -7px;
+    }
+
+    .timeline-node:nth-child(even) .timeline-dot {
+      right: -7px;
+      left: auto;
+    }
+  }
+
+  .timeline-dot-active {
+    background: #22C55E;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+  }
+
+  /* ── Location Dot Pulse ── */
+  @keyframes location-ping {
+    0% { transform: scale(1); opacity: 0.8; }
+    75%, 100% { transform: scale(2.5); opacity: 0; }
+  }
+
+  .location-ping {
+    animation: location-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 }
